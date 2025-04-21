@@ -4,3 +4,4 @@ opencv-python
 joblib
 pillow
 PyWavelets
+scikit-learn
