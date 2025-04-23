@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import joblib
 import cv2
 import numpy as np
@@ -6,6 +7,7 @@ from PIL import Image
 from fish_feature import extract_enhanced_features
 
 app = Flask(__name__)
+CORS(app)
 model = joblib.load('fish_freshness_svm_model.pkl')
 scaler = joblib.load('fish_freshness_scaler.pkl')
 
