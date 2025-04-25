@@ -17,21 +17,24 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    if 'image' not in request.files:
-        return jsonify({'error': 'No image uploaded'}), 400
-
     file = request.files['image']
-    try:
-        img = Image.open(file.stream).convert('RGB')
-        img = np.array(img)
-        roi = cv2.resize(img, (128, 128))
-        features = extract_enhanced_features(roi)
-        scaled = scaler.transform([features])
-        pred = model.predict(scaled)[0]
-        return jsonify({'label': int(pred)})
+    img = Image.open(file).convert('RGB')
+    img = np.array(img)
 
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    roi = extract_roi_from_image(img)
+    if roi is None:
+        return jsonify({'error': 'ROI tidak valid'}), 400
+
+    features = extract_enhanced_features(roi)
+    scaled = scaler.transform([features])
+
+    pred = model.predict(scaled)[0]
+    proba = model.predict_proba(scaled)[0][pred]  # confidence dari prediksi
+
+    return jsonify({
+        'label': int(pred),
+        'confidence': round(float(proba), 2)
+    })
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=8080)
