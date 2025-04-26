@@ -13,8 +13,8 @@ logging.basicConfig(level=logging.INFO)
 
 # Load model dengan error handling
 try:
-    model = joblib.load('fish_freshness_svm_model.pkl')
-    scaler = joblib.load('fish_freshness_scaler.pkl')
+    model = joblib.load('model/fish_freshness_svm_model.pkl')
+    scaler = joblib.load('model/fish_freshness_scaler.pkl')
     logging.info("Model and scaler loaded successfully")
 except Exception as e:
     logging.error("Error loading model:", exc_info=True)
